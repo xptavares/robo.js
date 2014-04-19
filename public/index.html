@@ -3,46 +3,10 @@
 	<title>Robo</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  	<link type="text/css" rel="stylesheet" href="/app.css">
   	<script src="/virtualjoystick.js"></script>
   	<script src="/socket.io/socket.io.js"></script>
-  	<script type="text/javascript">
-		 var socket = io.connect('http://192.168.1.191:3000');
-		  socket.on('news', function (data) {
-		    console.log(data);
-		    socket.emit('my other event', { my: 'data' });
-		  });
-  	</script>
-  	<style>
-		body {
-			overflow	: hidden;
-			padding		: 0;
-			margin		: 0;
-			background-color: #BBB;
-		}
-		#info {
-			position	: absolute;
-			top		: 0px;
-			width		: 100%;
-			padding		: 5px;
-			text-align	: center;
-		}
-		#info a {
-			color		: #66F;
-			text-decoration	: none;
-		}
-		#info a:hover {
-			text-decoration	: underline;
-		}
-		#container {
-			width		: 100%;
-			height		: 100%;
-			overflow	: hidden;
-			padding		: 0;
-			margin		: 0;
-			-webkit-user-select	: none;
-			-moz-user-select	: none;
-		}
-	</style>
+  	<script src="/app.js"></script>
 </head>
 
 	<body>
@@ -50,65 +14,6 @@
 		<div id="info">
 			<span id="result"></span>
 		</div> 
-		<script>
-			console.log("touchscreen is", VirtualJoystick.touchScreenAvailable() ? "available" : "not available");
-
-			var joystick	= new VirtualJoystick({
-				container	: document.getElementById('container'),
-				strokeStyle	: 'cyan',
-				limitStickTravel: true,
-				stickRadius	: 120		
-			});
-			joystick.addEventListener('touchStartValidation', function(event){
-				var touch	= event.changedTouches[0];
-				if( touch.pageX < window.innerWidth/2 )	return false;
-				return true
-			});
-			joystick.addEventListener('touchStart', function(){
-				console.log('down')
-			});
-			joystick.addEventListener('touchEnd', function(){
-				console.log('up')
-			});
-
-			// one on the right of the screen
-			var joystick2	= new VirtualJoystick({
-				container	: document.getElementById('container'),
-				strokeStyle	: 'orange',
-				limitStickTravel: true,
-				stickRadius	: 120	
-			});
-			joystick2.addEventListener('touchStartValidation', function(event){
-				var touch	= event.changedTouches[0];
-				if( touch.pageX >= window.innerWidth/2 )	return false;
-				return true
-			});
-			
-
-			setInterval(function(){
-				var outputEl	= document.getElementById('result');
-				outputEl.innerHTML	= '<b>Result:</b> '
-					+ ' dx:'+joystick.deltaX()
-					+ ' dy:'+joystick.deltaY()
-					+ (joystick.right()	? ' right'	: '')
-					+ (joystick.up()	? ' up'		: '')
-					+ (joystick.left()	? ' left'	: '')
-					+ (joystick.down()	? ' down' 	: '')
-					+ ' dx:'+joystick2.deltaX()
-					+ ' dy:'+joystick.deltaY()
-					+ (joystick2.right()	? ' right'	: '')
-					+ (joystick2.up()	? ' up'		: '')
-					+ (joystick2.left()	? ' left'	: '')
-					+ (joystick2.down()	? ' down' 	: '');
-
-				socket.emit('direction',
-					{ "joystick" : { 'deltaX': joystick.deltaX(), 'deltaY': joystick.deltaY(), 'right': joystick.right(), 'up': joystick.up(), 'left': joystick.left(), 'down': joystick.down()},
-					   "joystick2" : { 'deltaX': joystick2.deltaX(), 'deltaY': joystick2.deltaY(), 'right': joystick2.right(), 'up': joystick2.up(), 'left': joystick2.left(), 'down': joystick2.down()}
-					});		
-			}, 1/30 * 1000);
-
-
-		</script>
 	</body>
 
 
